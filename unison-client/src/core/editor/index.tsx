@@ -31,13 +31,7 @@ type EditorState = {
 
 const editorState = atom<EditorState>({
   key: 'editorState',
-  default: { elements: [{
-    kind: editorElementKeys.circle,
-    x: 100,
-    y: 100,
-    radius: 50,
-    color: 'green',
-  }] }
+  default: { elements: [] }
 });
 
 export const useEditorElements = () => {
@@ -47,11 +41,10 @@ export const useEditorElements = () => {
     set(s => ({ ...s, elements: [...s.elements, element] }))
   }
 
-
   const addCircle = (params: Pick<EditorElementCircle, 'x' | 'y'>) => {
-    console.log('Added')
     addElement({
-      ...params,
+      x: params.x,
+      y: params.y,
       radius: 50,
       color: 'green',
       kind: editorElementKeys.circle,
@@ -62,8 +55,6 @@ export const useEditorElements = () => {
   const circles = useMemo(() => {
     return state.elements.filter(e => e.kind === editorElementKeys.circle) as EditorElementCircle[]
   }, [state.elements])
-  
-  console.log('circles', circles);
 
   return {
     addCircle,
