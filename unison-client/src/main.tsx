@@ -4,9 +4,12 @@ import App from './App.tsx'
 
 import './normalize.css'
 import './index.css'
+import { RecoilRoot } from 'recoil'
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <React.StrictMode>
-    <App />
+    <RecoilRoot>
+      <App />
+    </RecoilRoot>
   </React.StrictMode>,
 )
