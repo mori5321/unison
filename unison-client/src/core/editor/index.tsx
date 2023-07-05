@@ -6,6 +6,7 @@ type Phantomic<T, U extends string> = T & { kind: U }
 const editorElementKeys = {
   circle: '__editorElementCircle',
   rectangle: '__editorElementRectangle',
+  text: '__editorElementText',
 } as const;
 
 type EditorElementCircle = Phantomic<{
@@ -15,6 +16,12 @@ type EditorElementCircle = Phantomic<{
   color: string,
 }, typeof editorElementKeys.circle>
 
+const isCircle = (e: EditorElement): e is EditorElementCircle =>
+  e.kind === editorElementKeys.circle
+
+const isText = (e: EditorElement): e is EditorElementText =>
+  e.kind === editorElementKeys.text
+
 type EditorElementRectangle = Phantomic<{
   x: number,
   y: number,
@@ -23,7 +30,15 @@ type EditorElementRectangle = Phantomic<{
   color: string,
 }, typeof editorElementKeys.rectangle>
 
-type EditorElement = EditorElementCircle | EditorElementRectangle
+type EditorElementText = Phantomic<{
+  x: number,
+  y: number,
+  text: string,
+  color: string,
+  fontSize: number,
+}, typeof editorElementKeys.text>
+
+type EditorElement = EditorElementCircle | EditorElementRectangle | EditorElementText
 
 type EditorState = {
   image: HTMLImageElement | null,
@@ -56,16 +71,30 @@ export const useEditorElements = () => {
     })
   }
 
+  const addText = (params: Pick<EditorElementText, 'x' | 'y' | 'text'>) => {
+    addElement({
+      x: params.x,
+      y: params.y,
+      text: params.text,
+      color: 'black',
+      fontSize: 20,
+      kind: editorElementKeys.text,
+    })
+  }
+
 
   const circles = useMemo(() => {
-    return state.elements.filter(e => e.kind === editorElementKeys.circle) as EditorElementCircle[]
+    return state.elements.filter(isCircle) as EditorElementCircle[]
   }, [state.elements])
 
   const image = useMemo(() => {
     return state.image
   }, [state.image])
 
-  console.log('Image', image)
+  const texts = useMemo(() => {
+    return state.elements.filter(isText)
+  }, [state.elements])
+
 
   const onImageSelected = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -83,9 +112,10 @@ export const useEditorElements = () => {
 
   return {
     addCircle,
+    addText,
     circles,
+    texts,
     onImageSelected,
     image,
   }
 }
-
