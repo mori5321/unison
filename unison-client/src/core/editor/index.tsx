@@ -26,13 +26,18 @@ type EditorElementRectangle = Phantomic<{
 type EditorElement = EditorElementCircle | EditorElementRectangle
 
 type EditorState = {
+  image: HTMLImageElement | null,
   elements: EditorElement[]
 }
 
 const editorState = atom<EditorState>({
   key: 'editorState',
-  default: { elements: [] }
+  default: {
+    image: null,
+    elements: []
+  }
 });
+
 
 export const useEditorElements = () => {
   const [state, set] = useRecoilState(editorState);
@@ -56,9 +61,31 @@ export const useEditorElements = () => {
     return state.elements.filter(e => e.kind === editorElementKeys.circle) as EditorElementCircle[]
   }, [state.elements])
 
+  const image = useMemo(() => {
+    return state.image
+  }, [state.image])
+
+  console.log('Image', image)
+
+  const onImageSelected = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onloadend = (e) => {
+      const image = new Image();
+      image.src = e.target?.result as string;
+      console.log('On Load')
+      set(s => ({ ...s, image }))
+    }
+    reader.readAsDataURL(file);
+  }
+
   return {
     addCircle,
     circles,
+    onImageSelected,
+    image,
   }
 }
 
