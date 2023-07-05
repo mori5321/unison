@@ -29,6 +29,7 @@ function App() {
           {image && <Image image={image} />}
         </Layer>
         <Layer>
+          {/* 単純に挿入順に並べた方が良さそう */}
           {circles.map((circle, index) => (
             <Circle key={index} x={circle.x} y={circle.y} radius={50} fill={circle.color} />
           ))}

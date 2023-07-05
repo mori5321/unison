@@ -83,6 +83,7 @@ export const useEditorElements = () => {
   }
 
 
+  // TODO: Filterせずに単純に挿入順に並べた方が良さそう
   const circles = useMemo(() => {
     return state.elements.filter(isCircle) as EditorElementCircle[]
   }, [state.elements])
