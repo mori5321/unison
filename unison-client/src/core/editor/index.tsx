@@ -1,7 +1,7 @@
 import { DefaultValue } from 'recoil';
 import { atom, useRecoilState } from 'recoil'
 
-type Phantomic<T, U extends string> = T & { _kind: U }
+type Phantomic<T, U extends string> = T & { __tag: U }
 
 const editorElementKeys = {
   circle: '__editorElementCircle',
@@ -17,13 +17,13 @@ type EditorElementCircle = Phantomic<{
 }, typeof editorElementKeys.circle>
 
 export const isCircle = (e: EditorElement): e is EditorElementCircle =>
-  e._kind === editorElementKeys.circle
+  e.__tag === editorElementKeys.circle
 
 export const isText = (e: EditorElement): e is EditorElementText =>
-  e._kind === editorElementKeys.text
+  e.__tag === editorElementKeys.text
 
 export const isRectangle = (e: EditorElement): e is EditorElementRectangle =>
-  e._kind === editorElementKeys.rectangle
+  e.__tag === editorElementKeys.rectangle
 
 type EditorElementRectangle = Phantomic<{
   x: number,
@@ -94,7 +94,7 @@ export const useEditorElements = () => {
       y: params.y,
       radius: 50,
       color: '#000000CC',
-      _kind: editorElementKeys.circle,
+      __tag: editorElementKeys.circle,
     })
   }
 
@@ -105,7 +105,7 @@ export const useEditorElements = () => {
       text: params.text,
       color: 'black',
       fontSize: 20,
-      _kind: editorElementKeys.text,
+      __tag: editorElementKeys.text,
     })
   }
 
