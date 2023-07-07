@@ -59,7 +59,6 @@ const editorState = atom<EditorState>({
   effects: [
     ({ setSelf, onSet }) => {
       onSet((newValue, oldValue) => {
-        if (typeof oldValue === typeof DefaultValue) return;
         if (oldValue instanceof DefaultValue) return; 
         if (newValue.elements === oldValue.elements) return;
         
