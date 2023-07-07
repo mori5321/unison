@@ -85,13 +85,6 @@ export const useEditorElements = () => {
     })
   }
 
-
-
-  const texts = useMemo(() => {
-    return state.elements.filter(isText)
-  }, [state.elements])
-
-
   const onImageSelected = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -107,7 +100,6 @@ export const useEditorElements = () => {
   }
 
   return {
-    texts,
     image: state.image,
     elements: state.elements,
     onImageSelected,
