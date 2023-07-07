@@ -42,7 +42,6 @@ export const canvasAreaCoords: CanvasAreaCoords = {
 export const EditorPage = () => {
   const { circles, image, texts, onImageSelected } = useEditorElements();
 
-
   return (
     <div className={styles.wrapper}>
       {
@@ -53,7 +52,6 @@ export const EditorPage = () => {
                 {image && <Image image={image} x={0} y={0} width={CanvasAreaWidth} height={CanvasAreaHeight} />}
               </Layer>
               <Layer>
-                {/* 単純に挿入順に並べた方が良さそう */}
                 {circles.map((circle, index) => (
                   <Circle key={index} x={circle.x} y={circle.y} radius={50} fill={circle.color} />
                 ))}
@@ -70,7 +68,7 @@ export const EditorPage = () => {
         )
       }
 
-      < div className={styles.toolboxWrapper}>
+      <div className={styles.toolboxWrapper}>
         <Toolbox />
       </div>
 
