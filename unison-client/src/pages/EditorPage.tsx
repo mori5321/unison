@@ -1,8 +1,9 @@
 import { Stage, Layer, Circle, Image, Text } from 'react-konva';
-import { useEditorElements } from '../core/editor';
+import { isCircle, isRectangle, isText, useEditorElements } from '../core/editor';
 import { Toolbox } from '../features/Toolbox';
 
 import styles from './EditorPage.module.css'
+import { exhaustiveUnionCheck } from '../utils/union';
 
 const CanvasAreaWidth = 1200;
 const CanvasAreaHeight = 600;
@@ -40,7 +41,7 @@ export const canvasAreaCoords: CanvasAreaCoords = {
 
 
 export const EditorPage = () => {
-  const { circles, image, texts, onImageSelected } = useEditorElements();
+  const { elements, image, onImageSelected } = useEditorElements();
 
   return (
     <div className={styles.wrapper}>
@@ -52,12 +53,17 @@ export const EditorPage = () => {
                 {image && <Image image={image} x={0} y={0} width={CanvasAreaWidth} height={CanvasAreaHeight} />}
               </Layer>
               <Layer>
-                {circles.map((circle, index) => (
-                  <Circle key={index} x={circle.x} y={circle.y} radius={50} fill={circle.color} />
-                ))}
-                {texts.map((text, index) => (
-                  <Text key={index} x={text.x} y={text.y} text={text.text} fontSize={text.fontSize} fill={text.color} />
-                ))}
+                {elements.map((element, index) => {
+                  if (isCircle(element)) {
+                    return <Circle key={index} x={element.x} y={element.y} radius={50} fill={element.color} />
+                  } else if (isText(element)) {
+                    return <Text key={index} x={element.x} y={element.y} text={element.text} fontSize={element.fontSize} fill={element.color} />
+                  } else if (isRectangle(element)) {
+                    return null
+                  } else {
+                    exhaustiveUnionCheck(element);
+                  }
+                })}
               </Layer>
             </Stage>
           </div>
