@@ -1,0 +1,23 @@
+.toolbox {
+  display: flex;  
+  gap: 4px;
+  padding: 8px 32px;
+  box-shadow: 0 0 4px rgba(0, 0, 0, 0.2);
+  border-radius: 32px;
+  background-color: #f9f9f9;
+}
+
+.mockIcon {
+  width: 48px;
+  height: 48px;
+  background-color: rgba(0, 0, 0, 0.8);
+  border-radius: 50%;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  
+  color: #fff;
+  font-size: 24px;
+}
+
