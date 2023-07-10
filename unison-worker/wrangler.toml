@@ -8,12 +8,17 @@ compatibility_flags = [
 
 [durable_objects]
 bindings = [
-  { name = "COUNTER", class_name = "Counter" }
+  { name = "COUNTER", class_name = "Counter" },
+  { name = "EDITOR", class_name = "Editor"},
 ]
 
 [[migrations]]
 tag = "v1" # Should be unique for each entry
 new_classes = ["Counter"]
+
+[[migrations]]
+tag = "v2"
+new_classes = ["Editor"]
 
 
 # Variable bindings. These are arbitrary, plaintext strings (similar to environment variables)

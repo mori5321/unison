@@ -2,7 +2,6 @@ import { useEditorElements } from '../../core/editor';
 import { canvasAreaCoords } from '../../pages/EditorPage';
 import styles from './index.module.css'
 
-
 export const Toolbox = () => {
   const { addCircle, addText } = useEditorElements();
   
