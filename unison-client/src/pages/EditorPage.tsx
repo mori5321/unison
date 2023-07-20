@@ -20,6 +20,7 @@ type CanvasAreaCoords = {
   readonly bottomRight: Coord;
 }
 
+
 export const canvasAreaCoords: CanvasAreaCoords = {
   topLeft: {
     x: 0,

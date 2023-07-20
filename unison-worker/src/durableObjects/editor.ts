@@ -1,5 +1,15 @@
 import { Env } from '../env';
-import { EditorState } from '../types/editor';
+import { EditorState } from '../core/editor';
+
+const editorKey = 'editor' as const;
+
+const initEditor = (id: string): EditorState => ({
+  id,
+  image: null,
+  elements: [],
+});
+
+const okResponse = JSON.stringify({ message: 'ok' });
 
 export class Editor {
   #state: DurableObjectState;
@@ -9,24 +19,28 @@ export class Editor {
   }
 
   async fetch(request: Request) {
-    let url = new URL(request.url);
+    const url = new URL(request.url);
+
     switch (url.pathname) {
       case '/fetch':
-        const value = await this.#state.storage.get<EditorState>('value');
+        const value = await this.#state.storage.get<EditorState>(editorKey);
         return new Response(JSON.stringify(value), { status: 200 });
+      case '/create':
+        const editor = initEditor(this.#state.id.toString());
+        await this.#state.storage.put<EditorState>(editorKey, editor);
+        return new Response(JSON.stringify(editor), { status: 200 });
       case '/update':
         const body = await request.json<EditorState>();
-        await this.#state.storage.put('value', body);
+        await this.#state.storage.put(editorKey, body);
 
         this.#state.getWebSockets().forEach((ws) => {
-          console.log('ws');
           ws.send(JSON.stringify(body));
         });
 
-        return new Response(JSON.stringify({ message: 'ok' }), { status: 200 });
+        return new Response(okResponse, { status: 200 });
       case '/delete':
         await this.#state.storage.delete('value');
-        return new Response(JSON.stringify({ message: 'ok' }), { status: 200 });
+        return new Response(okResponse, { status: 200 });
       case '/ws':
         if (request.headers.get('Upgrade') != 'websocket') {
           return new Response('expected websocket', { status: 400 });

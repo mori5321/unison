@@ -42,6 +42,7 @@ type EditorElementText = Phantomic<
 type EditorElement = EditorElementCircle | EditorElementRectangle | EditorElementText;
 
 export type EditorState = {
+  id: string;
   image: null | string;
   elements: EditorElement[];
 };
