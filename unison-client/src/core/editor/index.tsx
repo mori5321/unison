@@ -57,7 +57,7 @@ const editorState = atom<EditorState>({
     elements: [] as EditorElement[],
   } as EditorState,
   effects: [
-    ({ setSelf, onSet }) => {
+    ({ onSet }) => {
       onSet((newValue, oldValue) => {
         if (oldValue instanceof DefaultValue) return; 
         if (newValue.elements === oldValue.elements) return;
@@ -71,7 +71,7 @@ const editorState = atom<EditorState>({
           })
           .catch(e => {
           console.log('server is not running', e)
-          setSelf(oldValue)
+          // setSelf(oldValue)
         })
 
         console.log('Fetched')
