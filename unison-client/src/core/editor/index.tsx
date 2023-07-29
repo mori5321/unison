@@ -49,7 +49,6 @@ type EditorState = {
   elements: EditorElement[]
 }
 
-
 const editorState = atom<EditorState>({
   key: 'editorState',
   default: {
