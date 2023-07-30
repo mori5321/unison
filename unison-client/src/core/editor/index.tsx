@@ -1,7 +1,8 @@
 import { DefaultValue } from 'recoil';
-import { atom, useRecoilState } from 'recoil'
+import { atom, useRecoilState } from 'recoil';
+import { ping } from './client';
 
-type Phantomic<T, U extends string> = T & { __tag: U }
+type Phantomic<T, U extends string> = T & { __tag: U };
 
 const editorElementKeys = {
   circle: '__editorElementCircle',
@@ -9,45 +10,51 @@ const editorElementKeys = {
   text: '__editorElementText',
 } as const;
 
-type EditorElementCircle = Phantomic<{
-  x: number,
-  y: number,
-  radius: number,
-  color: string,
-}, typeof editorElementKeys.circle>
+type EditorElementCircle = Phantomic<
+  {
+    x: number;
+    y: number;
+    radius: number;
+    color: string;
+  },
+  typeof editorElementKeys.circle
+>;
 
-export const isCircle = (e: EditorElement): e is EditorElementCircle =>
-  e.__tag === editorElementKeys.circle
+export const isCircle = (e: EditorElement): e is EditorElementCircle => e.__tag === editorElementKeys.circle;
 
-export const isText = (e: EditorElement): e is EditorElementText =>
-  e.__tag === editorElementKeys.text
+export const isText = (e: EditorElement): e is EditorElementText => e.__tag === editorElementKeys.text;
 
-export const isRectangle = (e: EditorElement): e is EditorElementRectangle =>
-  e.__tag === editorElementKeys.rectangle
+export const isRectangle = (e: EditorElement): e is EditorElementRectangle => e.__tag === editorElementKeys.rectangle;
 
-type EditorElementRectangle = Phantomic<{
-  x: number,
-  y: number,
-  width: number,
-  height: number,
-  color: string,
-}, typeof editorElementKeys.rectangle>
+type EditorElementRectangle = Phantomic<
+  {
+    x: number;
+    y: number;
+    width: number;
+    height: number;
+    color: string;
+  },
+  typeof editorElementKeys.rectangle
+>;
 
-type EditorElementText = Phantomic<{
-  x: number,
-  y: number,
-  text: string,
-  color: string,
-  fontSize: number,
-}, typeof editorElementKeys.text>
+type EditorElementText = Phantomic<
+  {
+    x: number;
+    y: number;
+    text: string;
+    color: string;
+    fontSize: number;
+  },
+  typeof editorElementKeys.text
+>;
 
-type EditorElement = EditorElementCircle | EditorElementRectangle | EditorElementText
+type EditorElement = EditorElementCircle | EditorElementRectangle | EditorElementText;
 
 // TODO: Share types or interface with server side in some way.
 type EditorState = {
-  image: HTMLImageElement | null,
-  elements: EditorElement[]
-}
+  image: HTMLImageElement | null;
+  elements: EditorElement[];
+};
 
 const editorState = atom<EditorState>({
   key: 'editorState',
@@ -57,34 +64,28 @@ const editorState = atom<EditorState>({
   } as EditorState,
   effects: [
     ({ onSet }) => {
-      onSet((newValue, oldValue) => {
-        if (oldValue instanceof DefaultValue) return; 
+      onSet(async (newValue, oldValue) => {
+        if (oldValue instanceof DefaultValue) return;
         if (newValue.elements === oldValue.elements) return;
-        
-        console.log('elements changed', newValue.elements)
 
-        fetch('http://127.0.0.1:8787/ping')
-          .then(async (res) => {
-            const json = await res.text()
-            console.log('response', json)
-          })
-          .catch(e => {
-          console.log('server is not running', e)
-          // setSelf(oldValue)
-        })
+        const result = await ping();
+        if (result instanceof Error) {
+          console.error('server is not running', e);
+          return;
+        }
 
-        console.log('Fetched')
-      })
-    }
-  ]
+        console.log('ping result', result);
+      });
+    },
+  ],
 });
 
 export const useEditorElements = () => {
   const [state, set] = useRecoilState(editorState);
 
   const addElement = (element: EditorElement) => {
-    set(s => ({ ...s, elements: [...s.elements, element] }))
-  }
+    set((s) => ({ ...s, elements: [...s.elements, element] }));
+  };
 
   const addCircle = (params: Pick<EditorElementCircle, 'x' | 'y'>) => {
     addElement({
@@ -93,8 +94,8 @@ export const useEditorElements = () => {
       radius: 50,
       color: '#000000CC',
       __tag: editorElementKeys.circle,
-    })
-  }
+    });
+  };
 
   const addText = (params: Pick<EditorElementText, 'x' | 'y' | 'text'>) => {
     addElement({
@@ -104,8 +105,8 @@ export const useEditorElements = () => {
       color: 'black',
       fontSize: 20,
       __tag: editorElementKeys.text,
-    })
-  }
+    });
+  };
 
   const onImageSelected = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -115,10 +116,10 @@ export const useEditorElements = () => {
     reader.onloadend = (e) => {
       const image = new Image();
       image.src = e.target?.result as string;
-      set(s => ({ ...s, image }))
-    }
+      set((s) => ({ ...s, image }));
+    };
     reader.readAsDataURL(file);
-  }
+  };
 
   return {
     image: state.image,
@@ -126,5 +127,5 @@ export const useEditorElements = () => {
     onImageSelected,
     addCircle,
     addText,
-  }
-}
+  };
+};
