@@ -70,7 +70,7 @@ const editorState = atom<EditorState>({
 
         const result = await ping();
         if (result instanceof Error) {
-          console.error('server is not running', e);
+          console.error('server is not running', result);
           return;
         }
 
