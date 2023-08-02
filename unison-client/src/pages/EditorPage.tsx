@@ -78,7 +78,6 @@ export const EditorPage = () => {
       <div className={styles.toolboxWrapper}>
         <Toolbox />
       </div>
-
     </div >
   )
 }

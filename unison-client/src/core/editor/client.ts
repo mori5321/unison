@@ -1,6 +1,7 @@
-import { Either, isLeft, left } from 'fp-ts/lib/Either';
-import { WorkerURL } from '../common/env';
 import * as t from 'io-ts';
+import { Either, isLeft, left } from 'fp-ts/lib/Either';
+import { Phantomic } from '../../utils/common/phantomic'
+import { WorkerURL } from '../common/env';
 
 const editorResponse = t.type({
   id: t.string,
@@ -8,8 +9,6 @@ const editorResponse = t.type({
 
 type EditorResponse = t.TypeOf<typeof editorResponse>;
 
-
-type Phantomic<T, U extends string> = T & { _kind: U };
 
 // TODO: refactot it, make them reusable 
 type InvalidResponseError = Phantomic<{
@@ -19,7 +18,7 @@ type InvalidResponseError = Phantomic<{
 const InvalidResponseError = {
   new: (message: string): InvalidResponseError => ({
     message,
-    _kind: '__invalidResponseError',
+    __tag: '__invalidResponseError',
   })
 };
 
@@ -27,7 +26,7 @@ type UnknownError = Phantomic<{}, '__unknownError'>
 
 const UnknownError = {
   new: (): UnknownError => ({
-    _kind: '__unknownError',
+    __tag: '__unknownError',
   })
 };
 
