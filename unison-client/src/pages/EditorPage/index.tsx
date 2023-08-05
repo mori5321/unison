@@ -1,9 +1,9 @@
 import { Stage, Layer, Circle, Image, Text } from 'react-konva';
-import { isCircle, isRectangle, isText, useEditorElements } from '../core/editor';
-import { Toolbox } from '../features/Toolbox';
+import { isCircle, isRectangle, isText, useEditorElements } from '../../core/editor';
+import { Toolbox } from '../../features/Toolbox';
 
 import styles from './EditorPage.module.css'
-import { exhaustiveUnionCheck } from '../utils/union';
+import { exhaustiveUnionCheck } from '../../utils/union';
 
 const CanvasAreaWidth = 1200;
 const CanvasAreaHeight = 600;
