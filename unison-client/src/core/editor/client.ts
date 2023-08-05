@@ -1,6 +1,6 @@
 import * as t from 'io-ts';
 import { Either, isLeft, left } from 'fp-ts/lib/Either';
-import { Phantomic } from '../../utils/common/phantomic'
+import { Phantomic } from '../../utils/phantomic'
 import { WorkerURL } from '../common/env';
 
 const editorResponse = t.type({

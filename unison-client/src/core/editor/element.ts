@@ -1,4 +1,4 @@
-import { Phantomic } from '../../utils/common/phantomic';
+import { Phantomic } from '../../utils/phantomic';
 
 export const editorElementKeys = {
   circle: '__editorElementCircle',
