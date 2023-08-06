@@ -1,15 +1,28 @@
-import { Link } from 'wouter';
+import { useEditors } from '../../core/editors/state';
+import styles from './EditorsPage.module.css';
 
 export const EditorsPage = () => {
   return (
-    <div>
-      <div>
-        <button>create</button>
-      </div>
-      <div>List Here</div>
-      <div>
-        <Link href="/editor/hogehoge">to Editor Page</Link>
-      </div>
+    <div className={styles.wrapper}>
+      <NoData />
     </div>
   );
 };
+
+const NoData = () => {
+  const { create } = useEditors();
+
+  const handleClickCreate = async () => create()
+
+  return (
+    <div>
+      <button
+        className={styles.startButton}
+        onClick={handleClickCreate}
+      >
+          Start your 1st Editor
+      </button>
+    </div>
+  );
+}
+
