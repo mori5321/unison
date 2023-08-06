@@ -1,5 +1,6 @@
 import { Env } from '../env';
 import { EditorState } from '../core/editor';
+import { applicationDefaultHeader } from '../handlers/headers';
 
 const editorKey = 'editor' as const;
 
@@ -28,7 +29,7 @@ export class Editor {
       case '/create':
         const editor = initEditor(this.#state.id.toString());
         await this.#state.storage.put<EditorState>(editorKey, editor);
-        return new Response(JSON.stringify(editor), { status: 200 });
+        return new Response(JSON.stringify(editor), { status: 200, headers: applicationDefaultHeader });
       case '/update':
         const body = await request.json<EditorState>();
         await this.#state.storage.put(editorKey, body);

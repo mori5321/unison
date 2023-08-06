@@ -38,7 +38,13 @@ type EditorResponse = t.TypeOf<typeof editorResponse>;
 
 export const createEditor = async (): Promise<Either<EditorResponseError, EditorResponse>> => {
   try {
-    const res = await fetch(`${WorkerURL}/editor`, { method: 'POST' });
+    const res = await fetch(`${WorkerURL}/editor`, {
+      method: 'POST',
+      mode: 'cors',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+    });
     const json = await res.json();
     const response = editorResponse.decode(json);
 

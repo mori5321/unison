@@ -22,7 +22,6 @@ export const useEditors = () => {
 
   const create = async () => {
     const res = await createEditor();
-    console.log(res);
 
     if (isLeft(res)) {
       // TODO: how we handle error?
