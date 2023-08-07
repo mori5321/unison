@@ -7,7 +7,7 @@ function App() {
   return (
     <BasicLayout>
       <Route path="/" component={EditorsPage} />
-      <Route path="/editor/:id" component={EditorPage} />
+      <Route path="/editors/:id" component={EditorPage} />
     </BasicLayout>
   );
 }

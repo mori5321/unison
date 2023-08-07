@@ -16,3 +16,15 @@
   font-weight: bold;
   cursor: pointer;
 }
+
+.link {
+  cursor: pointer;
+}
+
+.addEditor {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin: 16px 0;
+}

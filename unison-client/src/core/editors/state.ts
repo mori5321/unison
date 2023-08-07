@@ -1,5 +1,5 @@
 import { atom, useRecoilState } from "recoil";
-import { createEditor } from "./client";
+import { createEditor, listEditors } from "./client";
 import { isLeft } from "fp-ts/lib/Either";
 
 type Editor = {
@@ -10,11 +10,18 @@ type EditorsState = {
   editors: Editor[] 
 }
 
-const editorsState = atom({
+const editorsState = atom<EditorsState>({
   key: 'editorsState',
-  default: {
-    editors: []
-  } as EditorsState
+  default: new Promise(async (resolve, reject) => {
+    const resp = await listEditors();
+    if (isLeft(resp)) {
+      reject(resp.left)
+    } else {
+      resolve({
+        editors: resp.right.data
+      })
+    }
+  })
 });
 
 export const useEditors = () => {
@@ -28,7 +35,7 @@ export const useEditors = () => {
       throw new Error('Failed to create editor')
     }
 
-    const editor = res.right;
+    const editor = res.right.data;
 
     set({
       ...state,
@@ -39,7 +46,10 @@ export const useEditors = () => {
     })
   }
 
+  const editors = state.editors;
+
   return {
+    editors,
     create,
   }
 }

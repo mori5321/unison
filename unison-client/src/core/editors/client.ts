@@ -3,6 +3,7 @@ import { Either, isLeft, left } from 'fp-ts/lib/Either';
 import { Phantomic } from '../../utils/phantomic'
 import { WorkerURL } from '../common/env';
 
+
 // TODO: refactot it, make them reusable 
 type InvalidResponseError = Phantomic<{
   message: string;
@@ -34,11 +35,43 @@ const editorResponse = t.type({
   id: t.string,
 });
 
-type EditorResponse = t.TypeOf<typeof editorResponse>;
 
-export const createEditor = async (): Promise<Either<EditorResponseError, EditorResponse>> => {
+const listEditorsResponse = t.type({
+  data: t.array(editorResponse),
+});
+
+type ListEditorsResponse = t.TypeOf<typeof listEditorsResponse>;
+
+export const listEditors = async (): Promise<Either<EditorResponseError, ListEditorsResponse>> => {
+  const res = await fetch(`${WorkerURL}/editors`, {
+    method: 'GET',
+    mode: 'cors',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+  });
+  const json = await res.json();
+  const response = listEditorsResponse.decode(json)
+
+  if (isLeft(response)) {
+    return left(InvalidResponseError.new(
+      `Invalid response: ${JSON.stringify(response.left)}`
+    ));
+  } else {
+    return response
+  }
+}
+
+
+const createEditorResponse = t.type({
+  data: editorResponse,
+});
+
+type CreateEditorResponse = t.TypeOf<typeof createEditorResponse>;
+
+export const createEditor = async (): Promise<Either<EditorResponseError, CreateEditorResponse>> => {
   try {
-    const res = await fetch(`${WorkerURL}/editor`, {
+    const res = await fetch(`${WorkerURL}/editors`, {
       method: 'POST',
       mode: 'cors',
       headers: {
@@ -46,7 +79,7 @@ export const createEditor = async (): Promise<Either<EditorResponseError, Editor
       },
     });
     const json = await res.json();
-    const response = editorResponse.decode(json);
+    const response = createEditorResponse.decode(json);
 
     if (isLeft(response)) {
       const err = InvalidResponseError.new(
