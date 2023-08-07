@@ -4,6 +4,8 @@ import { Toolbox } from '../../features/Toolbox';
 
 import styles from './EditorPage.module.css'
 import { exhaustiveUnionCheck } from '../../utils/union';
+import { useCallback, useEffect } from 'react';
+import { clean } from 'io-ts';
 
 const CanvasAreaWidth = 1200;
 const CanvasAreaHeight = 600;
@@ -41,11 +43,35 @@ export const canvasAreaCoords: CanvasAreaCoords = {
 }
 
 
-export const EditorPage = () => {
-  const { elements, image, onImageSelected } = useEditorElements();
+type EditorPageProps = {
+  readonly id: string;
+}
+export const EditorPage = ({ id }: EditorPageProps) => {
+  
+  const { editorId, elements, image, onImageSelected, initById, cleanup } = useEditorElements();
+  console.log(id);
+
+  useEffect(() => {
+    let ignore = false;
+
+    if (ignore) return;
+
+    initById(id).then(() => {
+      ignore = true;
+    });
+
+    return () => {
+      cleanup();
+      ignore = false
+    }
+  }, [id])
 
   return (
     <div className={styles.wrapper}>
+      <div className={styles.editorId}>
+        { editorId }
+      </div>
+      <div>
       {
         image ? (
           <div className={styles.canvasWrapper}>
@@ -74,6 +100,7 @@ export const EditorPage = () => {
           </div>
         )
       }
+      </div>
 
       <div className={styles.toolboxWrapper}>
         <Toolbox />

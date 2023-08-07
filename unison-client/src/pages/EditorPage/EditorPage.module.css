@@ -7,6 +7,10 @@
   gap: 32px;
 }
 
+.editorId {
+  font-weight: bold;
+}
+
 .toolboxWrapper {
   display: flex;
   flex-direction: column;

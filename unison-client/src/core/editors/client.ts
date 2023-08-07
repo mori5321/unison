@@ -4,7 +4,7 @@ import { Phantomic } from '../../utils/phantomic'
 import { WorkerURL } from '../common/env';
 
 
-// TODO: refactot it, make them reusable 
+// TODO: refactor it, make them reusable 
 type InvalidResponseError = Phantomic<{
   message: string;
 }, '__invalidResponseError'>

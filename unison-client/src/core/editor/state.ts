@@ -1,8 +1,10 @@
 import { atom, useRecoilState, DefaultValue } from 'recoil';
-import { ping } from './client';
 import { EditorElement, editorElementKeys, EditorElementText, EditorElementCircle } from './element'
+import { fetchEditorById } from './client';
+import { isLeft } from 'fp-ts/lib/Either';
 
 type EditorState = {
+  id: string;
   image: HTMLImageElement | null;
   elements: EditorElement[];
 };
@@ -11,6 +13,7 @@ type EditorState = {
 const editorState = atom<EditorState>({
   key: 'editorState',
   default: {
+    id: '',
     image: null,
     elements: [] as EditorElement[],
   } as EditorState,
@@ -18,15 +21,7 @@ const editorState = atom<EditorState>({
     ({ onSet }) => {
       onSet(async (newValue, oldValue) => {
         if (oldValue instanceof DefaultValue) return;
-        if (newValue.elements === oldValue.elements) return;
-
-        const result = await ping();
-        if (result instanceof Error) {
-          console.error('server is not running', result);
-          return;
-        }
-
-        console.log('ping result', result);
+        if (newValue.id === oldValue.id) return;
       });
     },
   ],
@@ -34,6 +29,34 @@ const editorState = atom<EditorState>({
 
 export const useEditorElements = () => {
   const [state, set] = useRecoilState(editorState);
+
+  const initById = async (id: string) => {
+    console.log('InitById', id)
+    const res = await fetchEditorById(id);
+    console.log('InitById res', res)
+
+    if (isLeft(res)) {
+      console.error('Invalid Response');
+      return;
+    }
+
+    const { data } = res.right;
+    set({
+      id: data.id,
+      image: null,
+      elements: data.elements
+    });
+  };
+
+  const cleanup = () => {
+    set({
+      id: '',
+      image: null,
+      elements: [],
+    });
+  };
+
+  // set((s) => ({ ...s, id }));
 
   const addElement = (element: EditorElement) => {
     set((s) => ({ ...s, elements: [...s.elements, element] }));
@@ -72,8 +95,12 @@ export const useEditorElements = () => {
     };
     reader.readAsDataURL(file);
   };
+  
 
   return {
+    editorId: state.id,
+    initById,
+    cleanup,
     image: state.image,
     elements: state.elements,
     onImageSelected,
