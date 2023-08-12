@@ -5,6 +5,7 @@ import { Toolbox } from '../../features/Toolbox';
 import styles from './EditorPage.module.css'
 import { exhaustiveUnionCheck } from '../../utils/union';
 import {useEffect } from 'react';
+import { useCanvasArea } from '../EditorsPage/useCanvasArea';
 
 const CanvasAreaWidth = window.innerWidth;
 const CanvasAreaHeight = window.innerHeight;
@@ -47,8 +48,11 @@ type EditorPageProps = {
 }
 export const EditorPage = ({ id }: EditorPageProps) => {
   
-  const { editorId, elements, image, onImageSelected, initById, cleanup } = useEditorElements();
-  console.log(id,  editorId);
+  const { elements, image, onImageSelected, initById, cleanup } = useEditorElements();
+
+  const { canvasArea } = useCanvasArea();
+
+  
 
   useEffect(() => {
     let ignore = false;
@@ -71,9 +75,9 @@ export const EditorPage = ({ id }: EditorPageProps) => {
       {
         image ? (
           <div className={styles.canvasWrapper}>
-            <Stage width={CanvasAreaWidth} height={CanvasAreaHeight} >
+            <Stage width={canvasArea.w} height={canvasArea.h} >
               <Layer>
-                {image && <Image image={image} x={0} y={0} width={image.width / 2} height={image.height / 2}  />}
+                {image && <Image image={image} x={(canvasArea.w / 2) - (image.width / 4)} y={(canvasArea.h / 2) - (image.height / 4)} width={image.width / 2} height={image.height / 2}  />}
               </Layer>
               <Layer>
                 {elements.map((element, index) => {
