@@ -4,11 +4,10 @@ import { Toolbox } from '../../features/Toolbox';
 
 import styles from './EditorPage.module.css'
 import { exhaustiveUnionCheck } from '../../utils/union';
-import { useCallback, useEffect } from 'react';
-import { clean } from 'io-ts';
+import {useEffect } from 'react';
 
-const CanvasAreaWidth = 1200;
-const CanvasAreaHeight = 600;
+const CanvasAreaWidth = window.innerWidth;
+const CanvasAreaHeight = window.innerHeight;
 
 type Coord = {
   readonly x: number;
@@ -49,7 +48,7 @@ type EditorPageProps = {
 export const EditorPage = ({ id }: EditorPageProps) => {
   
   const { editorId, elements, image, onImageSelected, initById, cleanup } = useEditorElements();
-  console.log(id);
+  console.log(id,  editorId);
 
   useEffect(() => {
     let ignore = false;
@@ -68,16 +67,13 @@ export const EditorPage = ({ id }: EditorPageProps) => {
 
   return (
     <div className={styles.wrapper}>
-      <div className={styles.editorId}>
-        { editorId }
-      </div>
       <div>
       {
         image ? (
           <div className={styles.canvasWrapper}>
             <Stage width={CanvasAreaWidth} height={CanvasAreaHeight} >
               <Layer>
-                {image && <Image image={image} x={0} y={0} width={CanvasAreaWidth} height={CanvasAreaHeight} />}
+                {image && <Image image={image} x={0} y={0} width={image.width / 2} height={image.height / 2}  />}
               </Layer>
               <Layer>
                 {elements.map((element, index) => {

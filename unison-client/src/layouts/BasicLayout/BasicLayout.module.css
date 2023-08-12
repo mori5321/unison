@@ -8,6 +8,7 @@
   padding: 8px 24px;
   font-size: 12px;
   position: fixed;
+  z-index: 100;
 }
 
 .logo {
