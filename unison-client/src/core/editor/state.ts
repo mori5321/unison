@@ -31,9 +31,7 @@ export const useEditorElements = () => {
   const [state, set] = useRecoilState(editorState);
 
   const initById = async (id: string) => {
-    console.log('InitById', id)
     const res = await fetchEditorById(id);
-    console.log('InitById res', res)
 
     if (isLeft(res)) {
       console.error('Invalid Response');
@@ -55,8 +53,6 @@ export const useEditorElements = () => {
       elements: [],
     });
   };
-
-  // set((s) => ({ ...s, id }));
 
   const addElement = (element: EditorElement) => {
     set((s) => ({ ...s, elements: [...s.elements, element] }));
