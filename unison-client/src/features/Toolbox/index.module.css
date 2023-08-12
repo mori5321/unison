@@ -24,7 +24,11 @@
   transition-timing-function: ease-out;
 }
 
-.mockIcon:hover {
+.mockIcon.active {
   color: #fff;
-  background-color: rgba(0, 0, 0, 0.8);
+  background-color: rgba(0, 0, 0, 0.8) !important;
+}
+
+.mockIcon:hover {
+  background-color: rgba(0, 0, 0, 0.1);
 }

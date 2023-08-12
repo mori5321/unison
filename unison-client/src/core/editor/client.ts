@@ -2,7 +2,7 @@ import * as t from 'io-ts';
 import { Either, isLeft, left } from 'fp-ts/lib/Either';
 import { Phantomic } from '../../utils/phantomic'
 import { WorkerURL } from '../common/env';
-import { editorElementKeys } from './element'
+import { editorElementKeys } from './element/element'
 
 
 // TODO: refactor it, make them reusable 

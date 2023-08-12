@@ -1,7 +1,8 @@
 import { atom, useRecoilState, DefaultValue } from 'recoil';
 import { EditorElement, editorElementKeys, EditorElementText, EditorElementCircle } from './element'
-import { fetchEditorById } from './client';
+import { fetchEditorById } from '../client';
 import { isLeft } from 'fp-ts/lib/Either';
+import sampleImage from '../../../assets/sample.jpeg';
 
 type EditorState = {
   id: string;
@@ -27,6 +28,7 @@ const editorState = atom<EditorState>({
   ],
 });
 
+
 export const useEditorElements = () => {
   const [state, set] = useRecoilState(editorState);
 
@@ -38,10 +40,13 @@ export const useEditorElements = () => {
       return;
     }
 
+    const mockImage = new Image();
+    mockImage.src = sampleImage;
+
     const { data } = res.right;
     set({
       id: data.id,
-      image: null,
+      image: mockImage,
       elements: data.elements
     });
   };

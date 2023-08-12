@@ -52,6 +52,7 @@ export const EditorPage = ({ id }: EditorPageProps) => {
 
   const { canvasArea } = useCanvasArea();
 
+
   
 
   useEffect(() => {
@@ -75,9 +76,9 @@ export const EditorPage = ({ id }: EditorPageProps) => {
       {
         image ? (
           <div className={styles.canvasWrapper}>
-            <Stage width={canvasArea.w} height={canvasArea.h} >
+            <Stage width={canvasArea.w} height={canvasArea.h}>
               <Layer>
-                {image && <Image image={image} x={(canvasArea.w / 2) - (image.width / 4)} y={(canvasArea.h / 2) - (image.height / 4)} width={image.width / 2} height={image.height / 2}  />}
+                {image && <Image image={image} x={(canvasArea.w / 2) - (image.width / 2)} y={(canvasArea.h / 2) - (image.height / 2)} width={image.width} height={image.height}  />}
               </Layer>
               <Layer>
                 {elements.map((element, index) => {
