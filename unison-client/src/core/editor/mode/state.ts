@@ -1,5 +1,6 @@
 import { useMemo } from 'react';
 import { atom, useRecoilState } from 'recoil';
+import { EditorElement } from '../element/element';
 
 type EditorMode = 'text::insert' | 'text::edit' | 'circle::insert';
 
@@ -35,6 +36,8 @@ export const useEditorMode = () => {
       targetElementId: '',
     });
 
+  const isTargetElement = (element: EditorElement) => state.targetElementId === element.id;
+
   const isMode = (mode: EditorMode) => state.mode === mode;
 
   const isTextMode = useMemo<boolean>(() => {
@@ -55,6 +58,8 @@ export const useEditorMode = () => {
 
   return {
     mode: state.mode,
+    targetElementId: state.targetElementId,
+    isTargetElement,
     startTextInsertMode,
     startTextEditMode,
     startCircleInsertMode,

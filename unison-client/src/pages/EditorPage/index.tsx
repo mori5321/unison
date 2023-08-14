@@ -1,4 +1,5 @@
-import { Stage, Layer, Circle, Image, Text } from 'react-konva';
+import { Stage, Layer, Circle, Image, Text, Group } from 'react-konva';
+import { Html } from 'react-konva-utils';
 import { isCircle, isRectangle, isText, useEditorElements } from '../../core/editor';
 import { Toolbox } from '../../features/Toolbox';
 
@@ -6,7 +7,9 @@ import styles from './EditorPage.module.css';
 import { exhaustiveUnionCheck } from '../../utils/union';
 import { useEffect } from 'react';
 import { useCanvasArea } from '../EditorsPage/useCanvasArea';
-import { handleClickCanvas, useEditorAction } from '../../core/editor/action/hooks';
+import { useEditorAction } from '../../core/editor/action/hooks';
+import { useEditorMode } from '../../core/editor/mode/state';
+import { EditableText } from '../../features/EditorElement/EditableText';
 
 const CanvasAreaWidth = window.innerWidth;
 const CanvasAreaHeight = window.innerHeight;
@@ -52,6 +55,8 @@ export const EditorPage = ({ id }: EditorPageProps) => {
 
   const { handleClickCanvas } = useEditorAction();
 
+  const { isTargetElement } = useEditorMode();
+
   useEffect(() => {
     let ignore = false;
 
@@ -87,11 +92,17 @@ export const EditorPage = ({ id }: EditorPageProps) => {
               <Layer>
                 {elements.map((element, index) => {
                   if (isCircle(element)) {
-                    return <Circle key={index} x={element.x} y={element.y} radius={50} fill={element.color} />;
-                  } else if (isText(element)) {
                     return (
-                      <Text key={index} x={element.x} y={element.y} text={element.text} fontSize={element.fontSize} fill={element.color} />
+                      <Circle
+                        key={index}
+                        x={element.x}
+                        y={element.y}
+                        radius={50}
+                        fill={isTargetElement(element) ? 'red' : element.color} /* FIXME: This is for debug*/
+                      />
                     );
+                  } else if (isText(element)) {
+                    return <EditableText element={element} isTargetElement={isTargetElement(element)} />;
                   } else if (isRectangle(element)) {
                     return null;
                   } else {
