@@ -8,6 +8,7 @@ export const editorElementKeys = {
 
 export type EditorElementCircle = Phantomic<
   {
+    id: string;
     x: number;
     y: number;
     radius: number;
@@ -18,6 +19,7 @@ export type EditorElementCircle = Phantomic<
 
 export type EditorElementRectangle = Phantomic<
   {
+    id: string;
     x: number;
     y: number;
     width: number;
@@ -29,6 +31,7 @@ export type EditorElementRectangle = Phantomic<
 
 export type EditorElementText = Phantomic<
   {
+    id: string;
     x: number;
     y: number;
     text: string;
@@ -44,6 +47,4 @@ export const isText = (e: EditorElement): e is EditorElementText => e.__tag === 
 
 export const isRectangle = (e: EditorElement): e is EditorElementRectangle => e.__tag === editorElementKeys.rectangle;
 
-
 export type EditorElement = EditorElementCircle | EditorElementRectangle | EditorElementText;
-

@@ -10,6 +10,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@types/uuid": "^9.0.2",
     "fp-ts": "^2.16.1",
     "io-ts": "^2.2.20",
     "konva": "^9.2.0",
@@ -17,6 +18,7 @@
     "react-dom": "^18.2.0",
     "react-konva": "^18.2.10",
     "recoil": "^0.7.7",
+    "uuid": "^9.0.0",
     "wouter": "^2.11.0"
   },
   "devDependencies": {

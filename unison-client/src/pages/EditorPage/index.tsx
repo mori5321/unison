@@ -2,10 +2,11 @@ import { Stage, Layer, Circle, Image, Text } from 'react-konva';
 import { isCircle, isRectangle, isText, useEditorElements } from '../../core/editor';
 import { Toolbox } from '../../features/Toolbox';
 
-import styles from './EditorPage.module.css'
+import styles from './EditorPage.module.css';
 import { exhaustiveUnionCheck } from '../../utils/union';
-import {useEffect } from 'react';
+import { useEffect } from 'react';
 import { useCanvasArea } from '../EditorsPage/useCanvasArea';
+import { handleClickCanvas, useEditorAction } from '../../core/editor/action/hooks';
 
 const CanvasAreaWidth = window.innerWidth;
 const CanvasAreaHeight = window.innerHeight;
@@ -13,15 +14,14 @@ const CanvasAreaHeight = window.innerHeight;
 type Coord = {
   readonly x: number;
   readonly y: number;
-}
+};
 
 type CanvasAreaCoords = {
   readonly topLeft: Coord;
   readonly topRight: Coord;
   readonly bottomLeft: Coord;
   readonly bottomRight: Coord;
-}
-
+};
 
 export const canvasAreaCoords: CanvasAreaCoords = {
   topLeft: {
@@ -39,21 +39,18 @@ export const canvasAreaCoords: CanvasAreaCoords = {
   bottomRight: {
     x: CanvasAreaWidth,
     y: CanvasAreaHeight,
-  }
-}
-
+  },
+};
 
 type EditorPageProps = {
   readonly id: string;
-}
+};
 export const EditorPage = ({ id }: EditorPageProps) => {
-  
   const { elements, image, onImageSelected, initById, cleanup } = useEditorElements();
 
   const { canvasArea } = useCanvasArea();
 
-
-  
+  const { handleClickCanvas } = useEditorAction();
 
   useEffect(() => {
     let ignore = false;
@@ -66,28 +63,37 @@ export const EditorPage = ({ id }: EditorPageProps) => {
 
     return () => {
       cleanup();
-      ignore = false
-    }
-  }, [id])
+      ignore = false;
+    };
+  }, [id]);
 
   return (
     <div className={styles.wrapper}>
       <div>
-      {
-        image ? (
+        {image ? (
           <div className={styles.canvasWrapper}>
-            <Stage width={canvasArea.w} height={canvasArea.h}>
+            <Stage width={canvasArea.w} height={canvasArea.h} onClick={handleClickCanvas}>
               <Layer>
-                {image && <Image image={image} x={(canvasArea.w / 2) - (image.width / 2)} y={(canvasArea.h / 2) - (image.height / 2)} width={image.width} height={image.height}  />}
+                {image && (
+                  <Image
+                    image={image}
+                    x={canvasArea.w / 2 - image.width / 2}
+                    y={canvasArea.h / 2 - image.height / 2}
+                    width={image.width}
+                    height={image.height}
+                  />
+                )}
               </Layer>
               <Layer>
                 {elements.map((element, index) => {
                   if (isCircle(element)) {
-                    return <Circle key={index} x={element.x} y={element.y} radius={50} fill={element.color} />
+                    return <Circle key={index} x={element.x} y={element.y} radius={50} fill={element.color} />;
                   } else if (isText(element)) {
-                    return <Text key={index} x={element.x} y={element.y} text={element.text} fontSize={element.fontSize} fill={element.color} />
+                    return (
+                      <Text key={index} x={element.x} y={element.y} text={element.text} fontSize={element.fontSize} fill={element.color} />
+                    );
                   } else if (isRectangle(element)) {
-                    return null
+                    return null;
                   } else {
                     exhaustiveUnionCheck(element);
                   }
@@ -99,15 +105,12 @@ export const EditorPage = ({ id }: EditorPageProps) => {
           <div className={styles.imageSelectWrapper}>
             <input type="file" accept="image/*" onChange={onImageSelected} />
           </div>
-        )
-      }
+        )}
       </div>
 
       <div className={styles.toolboxWrapper}>
         <Toolbox />
       </div>
-    </div >
-  )
-}
-
-
+    </div>
+  );
+};

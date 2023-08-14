@@ -1,15 +1,15 @@
 import { atom, useRecoilState, DefaultValue } from 'recoil';
-import { EditorElement, editorElementKeys, EditorElementText, EditorElementCircle } from './element'
+import { EditorElement, editorElementKeys, EditorElementText, EditorElementCircle } from './element';
 import { fetchEditorById } from '../client';
 import { isLeft } from 'fp-ts/lib/Either';
 import sampleImage from '../../../assets/sample.jpeg';
+import { genUUID } from '../../../utils/uuid';
 
 type EditorState = {
   id: string;
   image: HTMLImageElement | null;
   elements: EditorElement[];
 };
-
 
 const editorState = atom<EditorState>({
   key: 'editorState',
@@ -27,7 +27,6 @@ const editorState = atom<EditorState>({
     },
   ],
 });
-
 
 export const useEditorElements = () => {
   const [state, set] = useRecoilState(editorState);
@@ -47,7 +46,7 @@ export const useEditorElements = () => {
     set({
       id: data.id,
       image: mockImage,
-      elements: data.elements
+      elements: data.elements,
     });
   };
 
@@ -63,18 +62,26 @@ export const useEditorElements = () => {
     set((s) => ({ ...s, elements: [...s.elements, element] }));
   };
 
-  const addCircle = (params: Pick<EditorElementCircle, 'x' | 'y'>) => {
+  // TODO: use Phantom Type or Alias type for returning ID.
+  const addCircle = (params: Pick<EditorElementCircle, 'x' | 'y'>): string => {
+    const id = genUUID();
     addElement({
+      id,
       x: params.x,
       y: params.y,
       radius: 50,
       color: '#000000CC',
       __tag: editorElementKeys.circle,
     });
+
+    return id;
   };
 
-  const addText = (params: Pick<EditorElementText, 'x' | 'y' | 'text'>) => {
+  // TODO: use Phantom Type or Alias type for returning ID.
+  const addText = (params: Pick<EditorElementText, 'x' | 'y' | 'text'>): string => {
+    const id = genUUID();
     addElement({
+      id,
       x: params.x,
       y: params.y,
       text: params.text,
@@ -82,6 +89,8 @@ export const useEditorElements = () => {
       fontSize: 20,
       __tag: editorElementKeys.text,
     });
+
+    return id;
   };
 
   const onImageSelected = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -96,7 +105,6 @@ export const useEditorElements = () => {
     };
     reader.readAsDataURL(file);
   };
-  
 
   return {
     editorId: state.id,
