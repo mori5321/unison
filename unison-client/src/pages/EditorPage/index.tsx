@@ -9,6 +9,7 @@ import { useCanvasArea } from '../EditorsPage/useCanvasArea';
 import { useEditorAction } from '../../core/editor/action/hooks';
 import { useEditorMode } from '../../core/editor/mode/state';
 import { EditableText } from '../../features/EditorElement/EditableText';
+import { elem } from 'fp-ts/lib/Option';
 
 const CanvasAreaWidth = window.innerWidth;
 const CanvasAreaHeight = window.innerHeight;
@@ -50,7 +51,7 @@ type EditorPageProps = {
 export const EditorPage = ({ id }: EditorPageProps) => {
   const { elements, image, onImageSelected, initById, cleanup } = useEditorElements();
 
-  const { canvasArea } = useCanvasArea();
+  const { canvasArea, fromCenterOrigin } = useCanvasArea();
 
   const { handleClickCanvas } = useEditorAction();
 
@@ -90,12 +91,14 @@ export const EditorPage = ({ id }: EditorPageProps) => {
               </Layer>
               <Layer>
                 {elements.map((element, index) => {
+                  /* TODO: Refactor Tight Coupling */
+                  const { x, y } = fromCenterOrigin(element.x, element.y);
                   if (isCircle(element)) {
                     return (
                       <Circle
                         key={index}
-                        x={element.x}
-                        y={element.y}
+                        x={x}
+                        y={y}
                         radius={element.radius}
                         fill={isTargetElement(element) ? 'red' : element.color} /* FIXME: This is for debug*/
                       />

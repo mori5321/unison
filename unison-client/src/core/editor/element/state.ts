@@ -4,6 +4,7 @@ import { fetchEditorById } from '../client';
 import { isLeft } from 'fp-ts/lib/Either';
 import sampleImage from '../../../assets/sample.jpeg';
 import { genUUID } from '../../../utils/uuid';
+import { useCanvasArea } from '../../../pages/EditorsPage/useCanvasArea';
 
 type EditorState = {
   id: string;
@@ -30,6 +31,7 @@ const editorState = atom<EditorState>({
 
 export const useEditorElements = () => {
   const [state, set] = useRecoilState(editorState);
+  const { toCenterOrigin } = useCanvasArea();
 
   const initById = async (id: string) => {
     const res = await fetchEditorById(id);
@@ -65,10 +67,12 @@ export const useEditorElements = () => {
   // TODO: use Phantom Type or Alias type for returning ID.
   const addCircle = (params: Pick<EditorElementCircle, 'x' | 'y'>): string => {
     const id = genUUID();
+    // TODO: refactor tight coupling with useCanvasArea
+    const { x, y } = toCenterOrigin(params.x, params.y);
     addElement({
       id,
-      x: params.x,
-      y: params.y,
+      x,
+      y,
       radius: 24,
       color: '#000000CC',
       __tag: editorElementKeys.circle,
@@ -80,10 +84,12 @@ export const useEditorElements = () => {
   // TODO: use Phantom Type or Alias type for returning ID.
   const addText = (params: Pick<EditorElementText, 'x' | 'y' | 'text'>): string => {
     const id = genUUID();
+
+    const { x, y } = toCenterOrigin(params.x, params.y);
     addElement({
       id,
-      x: params.x,
-      y: params.y,
+      x,
+      y,
       text: params.text,
       color: 'black',
       fontSize: 20,
