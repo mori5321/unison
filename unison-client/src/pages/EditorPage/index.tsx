@@ -1,5 +1,4 @@
-import { Stage, Layer, Circle, Image, Text, Group } from 'react-konva';
-import { Html } from 'react-konva-utils';
+import { Stage, Layer, Circle, Image } from 'react-konva';
 import { isCircle, isRectangle, isText, useEditorElements } from '../../core/editor';
 import { Toolbox } from '../../features/Toolbox';
 
