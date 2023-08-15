@@ -12,6 +12,7 @@
   "dependencies": {
     "@types/uuid": "^9.0.2",
     "fp-ts": "^2.16.1",
+    "immer": "^10.0.2",
     "io-ts": "^2.2.20",
     "konva": "^9.2.0",
     "react": "^18.2.0",

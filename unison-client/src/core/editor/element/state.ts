@@ -5,6 +5,7 @@ import { isLeft } from 'fp-ts/lib/Either';
 import sampleImage from '../../../assets/sample.jpeg';
 import { genUUID } from '../../../utils/uuid';
 import { useCanvasArea } from '../../../pages/EditorsPage/useCanvasArea';
+import { produce } from 'immer';
 
 type EditorState = {
   id: string;
@@ -99,6 +100,17 @@ export const useEditorElements = () => {
     return id;
   };
 
+  const updateElement = (element: EditorElement) => {
+    const next = produce(state, (draft) => {
+      const index = draft.elements.findIndex((e) => e.id === element.id);
+      if (index === -1) return draft;
+
+      draft.elements[index] = element;
+    });
+
+    set(next);
+  };
+
   const onImageSelected = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -121,5 +133,6 @@ export const useEditorElements = () => {
     onImageSelected,
     addCircle,
     addText,
+    updateElement,
   };
 };
