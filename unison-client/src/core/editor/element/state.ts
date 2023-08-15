@@ -69,7 +69,7 @@ export const useEditorElements = () => {
       id,
       x: params.x,
       y: params.y,
-      radius: 50,
+      radius: 24,
       color: '#000000CC',
       __tag: editorElementKeys.circle,
     });

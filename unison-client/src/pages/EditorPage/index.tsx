@@ -97,7 +97,7 @@ export const EditorPage = ({ id }: EditorPageProps) => {
                         key={index}
                         x={element.x}
                         y={element.y}
-                        radius={50}
+                        radius={element.radius}
                         fill={isTargetElement(element) ? 'red' : element.color} /* FIXME: This is for debug*/
                       />
                     );
