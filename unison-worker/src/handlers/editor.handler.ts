@@ -1,5 +1,6 @@
 import { Env } from '../env';
 import { IRequest } from 'itty-router';
+import { applicationDefaultHeader } from './headers';
 
 // EditorCreateHandler
 export const EditorInitHandler = async (_request: IRequest, env: Env) => {
@@ -11,23 +12,46 @@ export const EditorInitHandler = async (_request: IRequest, env: Env) => {
   return resp;
 };
 
-export const EditorListHandler = async (_request: IRequest, env: Env) => {
-  const id = env.EDITOR.idFromName('editor');
-  const obj = env.EDITOR.get(id);
-  const resp = await obj.fetch('https://.../list');
+const mockEditors = [
+  {
+    id: 'timestopblue',
+    image: null,
+    elements: [],
+  },
+  {
+    id: 'helloskytone',
+    image: null,
+    elements: [],
+  },
+];
 
-  return resp;
+export const EditorListHandler = async (_request: IRequest, _env: Env) => {
+  const body = { data: mockEditors };
+
+  return new Response(JSON.stringify(body), { headers: applicationDefaultHeader });
 };
 
-export const EditorFetchHandler = async (request: IRequest, env: Env) => {
-  const id = env.EDITOR.idFromName('editor');
-  const obj = env.EDITOR.get(id);
+export const EditorFetchHandler = async (request: IRequest, _env: Env) => {
+  const id = request.params['id'];
 
-  const editorId = request.params['id'];
-  const resp = await obj.fetch(`https://.../fetch?id=${editorId}`, request);
+  const editor = mockEditors.find((editor) => editor.id === id);
+  if (!editor) {
+    return new Response('Not Found', { status: 404 })
+  }
 
-  return resp;
+  const body = { data: editor };
+  return new Response(JSON.stringify(body), { headers: applicationDefaultHeader });
 };
+
+// export const EditorFetchHandler = async (request: IRequest, env: Env) => {
+//   const id = env.EDITOR.idFromName('editor');
+//   const obj = env.EDITOR.get(id);
+//
+//   const editorId = request.params['id'];
+//   const resp = await obj.fetch(`https://.../fetch?id=${editorId}`, request);
+//
+//   return resp;
+// };
 
 export const EditorDeleteHandler = async (request: IRequest, _env: Env) => {
   // const id = request;

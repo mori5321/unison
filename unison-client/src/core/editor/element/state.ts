@@ -37,8 +37,9 @@ export const useEditorElements = () => {
   const initById = async (id: string) => {
     const res = await fetchEditorById(id);
 
+
     if (isLeft(res)) {
-      console.error('Invalid Response');
+      console.error(res.left);
       return;
     }
 
