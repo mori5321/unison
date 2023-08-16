@@ -1,9 +1,11 @@
 import { KonvaEventObject } from 'konva/lib/Node';
 import { useEditorElements } from '..';
 import { useEditorMode } from '../mode/state';
+import { useKeyPressEvent } from 'react-use';
 
+// useEditorEvent ?
 export const useEditorAction = () => {
-  const { mode, startTextEditMode } = useEditorMode();
+  const { mode, startDefaultMode, startTextEditMode } = useEditorMode();
   const { addText, addCircle } = useEditorElements();
 
   const handleClickCanvas = (e: KonvaEventObject<MouseEvent>) => {
@@ -11,10 +13,12 @@ export const useEditorAction = () => {
       const id = addText({
         x: e.evt.x,
         y: e.evt.y,
-        text: 'hello',
+        text: '',
       });
 
       startTextEditMode(id);
+    } else if (mode === 'text::edit') {
+      startDefaultMode();
     } else if (mode === 'circle::insert') {
       addCircle({
         x: e.evt.x,
@@ -27,3 +31,13 @@ export const useEditorAction = () => {
     handleClickCanvas,
   };
 };
+
+
+export const useEditorKeyboardEvent = () => {
+  const { startDefaultMode } = useEditorMode();
+
+  useKeyPressEvent('Enter', () => {
+    startDefaultMode();
+  });
+}
+

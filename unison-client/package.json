@@ -19,6 +19,7 @@
     "react-dom": "^18.2.0",
     "react-konva": "^18.2.10",
     "react-konva-utils": "^1.0.5",
+    "react-use": "^17.4.0",
     "recoil": "^0.7.7",
     "uuid": "^9.0.0",
     "wouter": "^2.11.0"

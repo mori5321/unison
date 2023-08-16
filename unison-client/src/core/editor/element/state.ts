@@ -93,7 +93,7 @@ export const useEditorElements = () => {
       y,
       text: params.text,
       color: 'black',
-      fontSize: 20,
+      fontSize: 16,
       __tag: editorElementKeys.text,
     });
 

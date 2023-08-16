@@ -6,7 +6,7 @@ import styles from './EditorPage.module.css';
 import { exhaustiveUnionCheck } from '../../utils/union';
 import { useEffect } from 'react';
 import { useCanvasArea } from '../EditorsPage/useCanvasArea';
-import { useEditorAction } from '../../core/editor/action/hooks';
+import { useEditorAction, useEditorKeyboardEvent } from '../../core/editor/action/hooks';
 import { useEditorMode } from '../../core/editor/mode/state';
 import { EditableText } from '../../features/EditorElement/EditableText';
 import { elem } from 'fp-ts/lib/Option';
@@ -57,6 +57,8 @@ export const EditorPage = ({ id }: EditorPageProps) => {
 
   const { isTargetElement } = useEditorMode();
 
+  useEditorKeyboardEvent();
+
   useEffect(() => {
     let ignore = false;
 
@@ -71,6 +73,10 @@ export const EditorPage = ({ id }: EditorPageProps) => {
       ignore = false;
     };
   }, [id]);
+
+  useEffect(() => {
+    
+  });
 
   return (
     <div className={styles.wrapper}>
