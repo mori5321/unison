@@ -7,7 +7,6 @@ import { genUUID } from '../../../utils/uuid';
 import { useCanvasArea } from '../../../pages/EditorsPage/useCanvasArea';
 import { produce } from 'immer';
 import { useEffect, useRef } from 'react';
-import { setEngine } from 'crypto';
 
 type EditorState = {
   id: string;

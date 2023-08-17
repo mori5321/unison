@@ -9,7 +9,6 @@ import { useCanvasArea } from '../EditorsPage/useCanvasArea';
 import { useEditorAction, useEditorKeyboardEvent } from '../../core/editor/action/hooks';
 import { useEditorMode } from '../../core/editor/mode/state';
 import { EditableText } from '../../features/EditorElement/EditableText';
-import { elem } from 'fp-ts/lib/Option';
 
 const CanvasAreaWidth = window.innerWidth;
 const CanvasAreaHeight = window.innerHeight;

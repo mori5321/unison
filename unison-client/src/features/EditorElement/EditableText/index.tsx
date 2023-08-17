@@ -1,5 +1,5 @@
 import { EditorElementText } from '../../../core/editor/element/element';
-import { Group, Rect, Text } from 'react-konva';
+import { Group, Text } from 'react-konva';
 import { Html } from 'react-konva-utils';
 import { useCanvasArea } from '../../../pages/EditorsPage/useCanvasArea';
 import { useEditorElements } from '../../../core/editor';
