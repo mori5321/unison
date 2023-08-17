@@ -4,9 +4,7 @@ import { SyncHandler } from './sync.handler';
 import { PingHandler } from './ping.handler';
 import {
   EditorWsHandler,
-  EditorUpdateHandler,
   EditorInitHandler,
-  EditorDeleteHandler,
   EditorListHandler,
   EditorFetchHandler,
 } from './editor.handler';
@@ -16,10 +14,8 @@ router.get('/sync', SyncHandler);
 router.get('/ping', PingHandler);
 router.get('/editors', EditorListHandler);
 router.get('/editors/:id', EditorFetchHandler);
-router.put('/editors', EditorUpdateHandler);
-router.delete('/editors', EditorDeleteHandler);
 router.post('/editors', EditorInitHandler);
-router.get('/ws/editor', EditorWsHandler);
+router.get('/editors/:id/ws', EditorWsHandler);
 
 export const handleRequest = async (request: Request, env: Env): Promise<Response> => {
   if (request.method === 'OPTIONS') {

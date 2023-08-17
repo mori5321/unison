@@ -1,7 +1,7 @@
 import * as t from 'io-ts';
 import { Either, isLeft, left } from 'fp-ts/lib/Either';
 import { Phantomic } from '../../utils/phantomic';
-import { WorkerURL } from '../common/env';
+import { WorkerURL, WorkerWsUrl } from '../common/env';
 import { editorElementKeys } from './element/element';
 
 // TODO: refactor it, make them reusable
@@ -95,3 +95,7 @@ export const fetchEditorById = async (id: string): Promise<Either<EditorResponse
     return response;
   }
 };
+
+export const wsEditorById = (id: string): WebSocket => {
+  return new WebSocket(`${WorkerWsUrl}/editors/${id}/ws`);
+}

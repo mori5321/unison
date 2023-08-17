@@ -8,6 +8,7 @@ export class Editor {
   }
 
   async fetch(request: Request) {
+    console.log('Here')
     const url = new URL(request.url);
 
     if (url.pathname === '/ws') {
@@ -19,18 +20,30 @@ export class Editor {
         return new Response('Method Not Allowed', { status: 405 });
       }
 
+
       // TODO: Rate Limit by IP Address
       // ref: https://github.com/cloudflare/workers-chat-demo/blob/master/src/chat.mjs
       let { 0: clientWs, 1: serverWs } = new WebSocketPair();
       this.#state.acceptWebSocket(serverWs);
 
-      serverWs.addEventListener('message', async (msg) => {
-        serverWs.send(msg.data);
-      });
-
       return new Response(null, { status: 101, webSocket: clientWs });
     } else {
       return new Response('Not Found', { status: 404 });
+    }
+  }
+  
+  // SEE: https://developers.cloudflare.com/durable-objects/api/hibernatable-websockets-api/
+  webSocketMessage(_ws: WebSocket, message: string | ArrayBuffer) {
+    const sockets = this.#state.getWebSockets();
+
+    const data = JSON.parse(message as string);
+
+    console.log('data', data)
+    
+    const json = JSON.stringify(data)
+
+    for (const socket of sockets) { 
+      socket.send(json)
     }
   }
 }

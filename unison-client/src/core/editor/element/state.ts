@@ -1,11 +1,13 @@
 import { atom, useRecoilState, DefaultValue } from 'recoil';
 import { EditorElement, editorElementKeys, EditorElementText, EditorElementCircle } from './element';
-import { fetchEditorById } from '../client';
+import { fetchEditorById, wsEditorById } from '../client';
 import { isLeft } from 'fp-ts/lib/Either';
 import sampleImage from '../../../assets/sample.jpeg';
 import { genUUID } from '../../../utils/uuid';
 import { useCanvasArea } from '../../../pages/EditorsPage/useCanvasArea';
 import { produce } from 'immer';
+import { useEffect, useRef } from 'react';
+import { setEngine } from 'crypto';
 
 type EditorState = {
   id: string;
@@ -33,6 +35,53 @@ const editorState = atom<EditorState>({
 export const useEditorElements = () => {
   const [state, set] = useRecoilState(editorState);
   const { toCenterOrigin } = useCanvasArea();
+  const websocket = useRef<WebSocket>()
+
+  const setElements = (elements: EditorElement[]) => {
+    set((s) => ({ ...s, elements }));
+
+    const body = {
+      ...state,
+      elements,
+    }
+    websocket.current?.send(JSON.stringify(body))
+  };
+
+  useEffect(() => {
+    if (!state.id) return;
+
+    console.log('connecting')
+    const ws = wsEditorById(state.id)
+    console.log('connected')
+    websocket.current = ws;
+
+    // // 雑すぎる気がするあとで直す
+    // // reconnect on close
+    // ws.addEventListener('close', () => {
+    //   console.log('Reconnecting...');
+    //   // sleep 3000ms
+    //   new Promise((resolve) => setTimeout(resolve, 3000)).then(() => {
+    //     initById(state.id);
+    //   })
+    // });
+    
+    const onMessage = (event: MessageEvent) => {
+      console.log('event', event.data)
+      const data = JSON.parse(event.data);
+      console.log('Data', data);
+
+      set({
+        ...data,
+        image: state.image,
+      })
+    }
+    ws.addEventListener('message', onMessage);
+
+    return () => {
+      ws.close();
+      ws.removeEventListener('message', () => {});
+    }
+  }, [state.id])
 
   const initById = async (id: string) => {
     const res = await fetchEditorById(id);
@@ -63,7 +112,8 @@ export const useEditorElements = () => {
   };
 
   const addElement = (element: EditorElement) => {
-    set((s) => ({ ...s, elements: [...s.elements, element] }));
+    // set((s) => ({ ...s, elements: [...s.elements, element] }));
+    setElements([...state.elements, element]);
   };
 
   // TODO: use Phantom Type or Alias type for returning ID.
@@ -109,7 +159,8 @@ export const useEditorElements = () => {
       draft.elements[index] = element;
     });
 
-    set(next);
+    // set(next);
+    setElements(next.elements);
   };
 
   const onImageSelected = (e: React.ChangeEvent<HTMLInputElement>) => {

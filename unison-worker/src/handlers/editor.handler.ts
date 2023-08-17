@@ -53,39 +53,28 @@ export const EditorFetchHandler = async (request: IRequest, _env: Env) => {
 //   return resp;
 // };
 
-export const EditorDeleteHandler = async (request: IRequest, _env: Env) => {
-  // const id = request;
-  const url = new URL(request.url);
-  const id = url.searchParams.get('id');
-  if (!id) return new Response('Missing id', { status: 400 });
 
-  return new Response(`Deleted: ${id}`, { status: 200 });
-};
 
-// EditorListHandler
-//
-// EditorFetchHandler
+export const EditorWsHandler = async (request: IRequest, env: Env) => {
+  const id = request.params['id'];
+  console.log('EditorWsHandler')
 
-export const EditorUpdateHandler = async (request: IRequest, env: Env) => {
-  let id = env.EDITOR.idFromName('editor');
-  let obj = env.EDITOR.get(id);
-  let resp = await obj.fetch('https://.../update', request);
+  if (!id) return new Response('No id', { status: 400 });
 
-  return resp;
-};
+  console.log('Here1', id)
 
-// export const EditorDeleteHandler = async (request: Request, env: Env) => {
-//   let id = env.EDITOR.idFromName('editor');
-//   let obj = env.EDITOR.get(id);
-//   let resp = await obj.fetch('https://.../delete', request);
-//
-//   return resp;
-// };
+  //
+  // const durableObjectId = env.EDITOR.newUniqueId();
+  const durableObjectId = env.EDITOR.idFromName(id);
+  console.log('durableObjectId', durableObjectId, durableObjectId.toString())
 
-export const EditorWsHandler = async (request: Request, env: Env) => {
-  let id = env.EDITOR.idFromName('editor');
-  let obj = env.EDITOR.get(id);
-  let resp = await obj.fetch('https://.../ws', request);
+  const durableObject = env.EDITOR.get(durableObjectId);
+  
+  console.log('Here2')
+
+  let resp = await durableObject.fetch('https://.../ws', request);
+  
+  console.log('Here3')
 
   return resp;
 };

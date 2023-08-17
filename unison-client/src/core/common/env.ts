@@ -15,6 +15,9 @@ const tryGetEnv = (envName: string): string => {
 
 const envNames = {
   WorkerURL: 'VITE_WORKER_URL',
+  WorkerWsURL: 'VITE_WORKER_WS_URL',
 };
 
 export const WorkerURL = tryGetEnv(envNames.WorkerURL);
+
+export const WorkerWsUrl = tryGetEnv(envNames.WorkerWsURL)
